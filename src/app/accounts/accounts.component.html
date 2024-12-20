@@ -1,1 +1,25 @@
-<p>accounts works!</p>
+
+<div class="container p-2">
+<div class="row gap-2">
+  <div class="col col-md-6">
+    <div class="card">
+      <div class="card-header"> Accounts</div>
+      <div class="card-body">
+        <form  [formGroup]="acountForm" (ngSubmit)="handleAccount()">
+          <div class="input-group">
+            <label class="input-group-text">Account Id:</label>
+            <input formControlName="accountId" type="text" class="form-control">
+            <button class="btn btn-info"><i class="bi bi-search"></i></button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="col col-md-6">
+
+  </div>
+
+</div>
+</div>

@@ -1,8 +1,19 @@
 <div class="container p-2">
-  <ng-container *ngIf="customers | async as listCustomers; else failure">
+  <ng-container *ngIf="customers | async as listCustomers; else failureOrLoading">
     <div class="card">
       <div class="card-header">Customers</div>
       <div class="card-body">
+        <div *ngIf="searchFormGroup">
+          {{this.searchFormGroup.value | json}}
+          <form [formGroup]="searchFormGroup" (ngSubmit)="handleSearchCustomers()">
+            <div class="input-group">
+              <label class="input-group-text">keyword</label>
+              <input type="text" formControlName="keyword" class="form-control" placeholder="Search here">
+              <button class="btn btn-info"><i class="bi bi-search"></i></button>
+
+            </div>
+          </form>
+        </div>
         <table class="table table-striped">
           <thead>
           <tr>
@@ -16,6 +27,9 @@
             <td>{{ c.id }}</td>
             <td>{{ c.name }}</td>
             <td>{{ c.email }}</td>
+          <td>
+            <button class="btn btn-danger" (click)="deleteCustomer(c)"><i class="bi bi-trash"></i></button>
+          </td>
 
           </tr>
 
@@ -25,9 +39,16 @@
     </div>
 
 </ng-container>
-<ng-template #failure >
-  <div class="text-danger">
-  {{ errorMsg }}
-  </div>
+<ng-template #failureOrLoading >
+
+  <ng-container *ngIf="errorMsg; else loading">
+    <div class="text-danger">
+      {{ errorMsg }}
+    </div>
+  </ng-container>
+  <ng-template #loading>
+    Loading...
+  </ng-template>
+
 </ng-template>
 </div>
