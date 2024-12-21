@@ -14,4 +14,19 @@ export class AccountService {
   {
     return this.http.get<AccountDetails>(this.backendHost+"/accounts/"+accountId+"/pageOperations?page="+page+"&size="+size);
   }
+
+  public debit(accountId:string,amount:number,description:string)
+  {
+    return this.http.post(this.backendHost+"/accounts/debit",{accountId,amount,description})
+  }
+
+  public credit(accountId:string,amount:number,description:string)
+  {
+    return this.http.post(this.backendHost+"/accounts/credit",{accountId,amount,description})
+  }
+  public transfer(accountSource:string,accountDest:string,amount:number,description:string)
+  {
+    let data = {accountIdSrc:accountSource,accountIdDest: accountDest,amount:amount,description:description};
+    return this.http.post(this.backendHost+"/accounts/transfer",data)
+  }
 }

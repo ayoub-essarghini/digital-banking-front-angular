@@ -1,25 +1,109 @@
-
 <div class="container p-2">
-<div class="row gap-2">
-  <div class="col col-md-6">
-    <div class="card">
-      <div class="card-header"> Accounts</div>
-      <div class="card-body">
-        <form  [formGroup]="acountForm" (ngSubmit)="handleAccount()">
-          <div class="input-group">
-            <label class="input-group-text">Account Id:</label>
-            <input formControlName="accountId" type="text" class="form-control">
-            <button class="btn btn-info"><i class="bi bi-search"></i></button>
-          </div>
-        </form>
+  <div class="row">
+    <div class="col col-md-6">
+      <div class="card">
+        <div class="card-header"> Accounts</div>
+        <div class="card-body">
+          <form [formGroup]="accountForm" (ngSubmit)="handleAccount()">
+            <div class="input-group">
+              <label class="input-group-text">Account Id:</label>
+              <input formControlName="accountId" type="text" class="form-control">
+              <button class="btn btn-info"><i class="bi bi-search"></i></button>
+            </div>
+          </form>
+          <ng-container *ngIf="accountDetails | async as accountDetails">
+            <div class="mb-3">
+              <label>Account Id: </label>
+              <label><strong class="mx-3">{{ accountDetails.accountId }}</strong></label>
+            </div>
+            <div class="mb-3">
+              <label>Balance:</label>
+              <label><strong class="mx-3">{{ accountDetails.balance | number: '1.2-2' }}</strong></label>
+            </div>
+            <table class="table">
+              <thead>
+              <th>ID</th>
+              <th>Date</th>
+              <th>Type</th>
+              <th>Montant</th>
+              </thead>
+              <tbody>
+              <tr *ngFor="let operation of accountDetails.accountOperationDTOS">
+                <td>
+                  {{ operation.id }}
+                </td>
+                <td>
+                  {{ operation.operationDate | date: "YYYY-MM-dd HH:mm:ss" }}
+                </td>
+                <td>{{ operation.type }}</td>
+                <td>{{ operation.amount | number: '1.2-2' }}</td>
+              </tr>
+              </tbody>
+            </table>
+            <ul class="nav nav-pills">
+              <li *ngFor="let item of [].constructor(accountDetails.totalPages); let p = index">
+                <a [ngClass]="p == currentPage ? 'btn-info text-light' : 'btn-outline' " (click)="goToPage(p)"
+                   class="btn  ms-1 mt-1">{{ p }}</a>
+              </li>
+            </ul>
+          </ng-container>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="col col-md-6">
+      <div class="card" *ngIf="accountDetails">
+        <div class="card-header">
+          Operations
+        </div>
+        <div class="card-body">
+          {{operationForm.value | json}}
+          <form [formGroup]="operationForm" (ngSubmit)="handleOperations()" method="post">
+            <div class="form-check form-check-inline">
+              <label for="debit" class="form-check-label">
+                DEBIT:
+              </label>
+              <input class="form-check-input" type="radio" formControlName="operationType" value="DEBIT" id="debit">
+            </div>
+            <div class="form-check form-check-inline">
+              <label for="credit" class="form-check-label">
+                CREDIT:
+              </label>
+              <input class="form-check-input" type="radio" formControlName="operationType" value="CREDIT" id="credit">
+            </div>
+            <div class="form-check form-check-inline mb-3">
+              <label for="transfer" class="form-check-label">
+                TRANSFER:
+              </label>
+              <input class="form-check-input" type="radio" formControlName="operationType" value="TRANSFER"
+                     id="transfer">
+            </div>
+            <div class=" mb-3" *ngIf="operationForm.value.operationType=='TRANSFER'">
+              <label class="form-label">
+                Account destination </label>
+              <input class="form-control" type="text" formControlName="accountDest">
+            </div>
+            <div class=" mb-3">
+              <label class="form-label">
+                Amount:
+              </label>
+              <input class="form-control" type="text" formControlName="amount">
+            </div>
+            <div class=" mb-3">
+              <label class="form-label">
+                Description </label>
+              <input class="form-control" type="text" formControlName="description">
+            </div>
+            <div class="d-grid mb-3">
+
+              <button class="btn btn-info ">Process</button>
+
+            </div>
+          </form>
+        </div>
       </div>
     </div>
 
   </div>
-
-  <div class="col col-md-6">
-
-  </div>
-
-</div>
 </div>
